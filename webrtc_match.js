@@ -82,33 +82,35 @@ function initializePlayer() {
   sendUpdate();
 }
 
-// Handle player movement
-function handlePlayerMovement(event) {
-  if (!players[playerId]) return;
-
-  const player = players[playerId];
-  switch (event.key) {
-    case 'ArrowUp':
-      player.y = Math.max(0, player.y - 10);
-      break;
-    case 'ArrowDown':
-      player.y = Math.min(gameCanvas.height, player.y + 10);
-      break;
-    case 'ArrowLeft':
-      player.x = Math.max(0, player.x - 10);
-      break;
-    case 'ArrowRight':
-      player.x = Math.min(gameCanvas.width, player.x + 10);
-      break;
-    default:
-      return; // Do nothing for other keys
-  }
-
-  console.log(`Player moved: ${playerId}`, player);
-  sendUpdate();
-}
-
-document.addEventListener('keydown', handlePlayerMovement);
+document.addEventListener('keydown', (event) => {
+    console.log(`Key pressed: ${event.key}`);
+    if (!players[playerId]) {
+      console.warn('Player not initialized yet.');
+      return;
+    }
+  
+    const player = players[playerId];
+    switch (event.key) {
+      case 'ArrowUp':
+        player.y = Math.max(0, player.y - 10);
+        break;
+      case 'ArrowDown':
+        player.y = Math.min(gameCanvas.height, player.y + 10);
+        break;
+      case 'ArrowLeft':
+        player.x = Math.max(0, player.x - 10);
+        break;
+      case 'ArrowRight':
+        player.x = Math.min(gameCanvas.width, player.x + 10);
+        break;
+      default:
+        return; // Do nothing for other keys
+    }
+  
+    console.log(`Player moved: ${JSON.stringify(player)}`);
+    sendUpdate();
+  });
+  
 
 // Send player positions to the peer
 function sendUpdate() {

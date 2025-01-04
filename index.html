@@ -3,28 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Match Code Multiplayer</title>
-  <link rel="stylesheet" href="style.css"> <!-- CSS loaded here -->
+  <title>Multiplayer Circle Game</title>
+  <link rel="stylesheet" href="style.css"> <!-- Add your stylesheet here -->
 </head>
 <body>
   <!-- Matchmaking Section -->
   <div id="matchmakingSection" class="container">
-    <h1>Match Code</h1>
+    <h1>Match Code Multiplayer</h1>
     <div class="matchmaking">
       <button id="createOffer" class="button">Create Match</button>
       <button id="joinMatch" class="button">Join Match</button>
-      <textarea id="matchCode" class="textarea" placeholder="Match Code"></textarea>
-      <textarea id="joinCode" class="textarea" placeholder="Enter Code to Join"></textarea>
+      <textarea id="matchCode" class="textarea" placeholder="Your Match Code"></textarea>
+      <textarea id="joinCode" class="textarea" placeholder="Enter Match Code"></textarea>
       <button id="connect" class="button">Connect</button>
     </div>
   </div>
 
-  <!-- Game Section (Initially Hidden) -->
+  <!-- Game Section -->
   <div id="gameSection" class="container" style="display: none;">
-    <h1>Pii Tanks</h1>
+    <h1>Multiplayer Game</h1>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <p>Use the arrow keys to move your circle around!</p>
   </div>
 
-  <script src="webrtc_match.js"></script>
+  <script src="webrtc_match.js"></script> <!-- Add your JavaScript file here -->
 </body>
 </html>
+
