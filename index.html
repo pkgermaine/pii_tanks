@@ -1,0 +1,25 @@
+<body>
+  <!-- Matchmaking Section -->
+  <div id="matchmakingSection" class="container">
+    <h1>Match Code Multiplayer</h1>
+    <div class="matchmaking">
+      <button id="createOffer" class="button">Create Match</button>
+      <button id="joinMatch" class="button">Join Match</button>
+      <textarea id="matchCode" class="textarea" placeholder="Match Code"></textarea>
+      <textarea id="joinCode" class="textarea" placeholder="Enter Code to Join"></textarea>
+      <button id="connect" class="button">Connect</button>
+    </div>
+  </div>
+
+  <!-- Messaging Section (Initially Hidden) -->
+  <div id="messagingSection" class="container" style="display: none;">
+    <h1>Messaging</h1>
+    <div class="message-section">
+      <input type="text" id="messageInput" class="input" placeholder="Type a message">
+      <button id="sendMessage" class="button">Send</button>
+      <ul id="messageLog" class="message-log"></ul>
+    </div>
+  </div>
+
+  <script src="webrtc_match.js"></script>
+</body>
