@@ -164,7 +164,7 @@ joinMatchButton.onclick = async () => {
     console.log('Decoded offer description:', offerDescription);
 
     createPeerConnection();
-    await peerConnection.setRemoteDescription(offerDescription); // Set the host's offer
+    await peerConnection.setRemoteDescription(offerDescription);
     console.log('Remote description set:', peerConnection.remoteDescription);
 
     // Generate an answer
