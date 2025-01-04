@@ -21,7 +21,9 @@ const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 function showGamePage() {
   matchmakingSection.style.display = 'none';
   gameSection.style.display = 'block';
-  gameLoop();
+  setTimeout(() => {
+    gameLoop(); // Start the game loop slightly later to ensure player initialization
+  }, 100);
 }
 
 // Create a new WebRTC peer connection
@@ -63,8 +65,8 @@ function setupDataChannel(channel) {
 
   dataChannel.onopen = () => {
     console.log('Data channel is open!');
-    showGamePage();
     initializePlayer();
+    showGamePage();
   };
 
   dataChannel.onmessage = (event) => {
@@ -88,7 +90,7 @@ document.addEventListener('keydown', (event) => {
   console.log(`Key pressed: ${event.key}`);
   if (!players[playerId]) {
     console.warn('Player not initialized yet.');
-    return;
+    return; // Exit early if the player isn't ready
   }
 
   const player = players[playerId];
