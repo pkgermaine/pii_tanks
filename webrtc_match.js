@@ -69,8 +69,10 @@ function setupDataChannel(channel) {
 
   dataChannel.onmessage = (event) => {
     const data = JSON.parse(event.data);
+    console.log('Message received:', data);
     if (data.type === 'update') {
       players = data.players; // Sync player positions
+      console.log('Players updated:', players);
     }
   };
 }
@@ -83,34 +85,33 @@ function initializePlayer() {
 }
 
 document.addEventListener('keydown', (event) => {
-    console.log(`Key pressed: ${event.key}`);
-    if (!players[playerId]) {
-      console.warn('Player not initialized yet.');
-      return;
-    }
-  
-    const player = players[playerId];
-    switch (event.key) {
-      case 'ArrowUp':
-        player.y = Math.max(0, player.y - 10);
-        break;
-      case 'ArrowDown':
-        player.y = Math.min(gameCanvas.height, player.y + 10);
-        break;
-      case 'ArrowLeft':
-        player.x = Math.max(0, player.x - 10);
-        break;
-      case 'ArrowRight':
-        player.x = Math.min(gameCanvas.width, player.x + 10);
-        break;
-      default:
-        return; // Do nothing for other keys
-    }
-  
-    console.log(`Player moved: ${JSON.stringify(player)}`);
-    sendUpdate();
-  });
-  
+  console.log(`Key pressed: ${event.key}`);
+  if (!players[playerId]) {
+    console.warn('Player not initialized yet.');
+    return;
+  }
+
+  const player = players[playerId];
+  switch (event.key) {
+    case 'ArrowUp':
+      player.y = Math.max(0, player.y - 10);
+      break;
+    case 'ArrowDown':
+      player.y = Math.min(gameCanvas.height, player.y + 10);
+      break;
+    case 'ArrowLeft':
+      player.x = Math.max(0, player.x - 10);
+      break;
+    case 'ArrowRight':
+      player.x = Math.min(gameCanvas.width, player.x + 10);
+      break;
+    default:
+      return; // Do nothing for other keys
+  }
+
+  console.log(`Player moved: ${JSON.stringify(player)}`);
+  sendUpdate();
+});
 
 // Send player positions to the peer
 function sendUpdate() {
@@ -126,6 +127,7 @@ function sendUpdate() {
 // Game loop to draw players
 function gameLoop() {
   ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+  console.log(`Rendering players: ${JSON.stringify(players)}`);
 
   for (const id in players) {
     const player = players[id];
