@@ -87,8 +87,11 @@ h2 {
   display: block; /* Default to visible */
 }
 
-#messagingSection {
-  display: none; /* Hidden by default */
+#gameCanvas {
+  display: block;
+  margin: 20px auto;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
 }
 
 .fade-in {
