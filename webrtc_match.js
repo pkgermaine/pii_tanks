@@ -77,27 +77,47 @@ function setupDataChannel(channel) {
 
 // Initialize this player's position
 function initializePlayer() {
-  players[playerId] = { x: Math.random() * 800, y: Math.random() * 600, color: getRandomColor() };
+  players[playerId] = { x: Math.random() * gameCanvas.width, y: Math.random() * gameCanvas.height, color: getRandomColor() };
+  console.log(`Player initialized: ${playerId}`, players[playerId]);
   sendUpdate();
 }
 
 // Handle player movement
-document.addEventListener('keydown', (event) => {
+function handlePlayerMovement(event) {
   if (!players[playerId]) return;
 
   const player = players[playerId];
-  if (event.key === 'ArrowUp') player.y -= 10;
-  if (event.key === 'ArrowDown') player.y += 10;
-  if (event.key === 'ArrowLeft') player.x -= 10;
-  if (event.key === 'ArrowRight') player.x += 10;
+  switch (event.key) {
+    case 'ArrowUp':
+      player.y = Math.max(0, player.y - 10);
+      break;
+    case 'ArrowDown':
+      player.y = Math.min(gameCanvas.height, player.y + 10);
+      break;
+    case 'ArrowLeft':
+      player.x = Math.max(0, player.x - 10);
+      break;
+    case 'ArrowRight':
+      player.x = Math.min(gameCanvas.width, player.x + 10);
+      break;
+    default:
+      return; // Do nothing for other keys
+  }
 
+  console.log(`Player moved: ${playerId}`, player);
   sendUpdate();
-});
+}
+
+document.addEventListener('keydown', handlePlayerMovement);
 
 // Send player positions to the peer
 function sendUpdate() {
   if (dataChannel && dataChannel.readyState === 'open') {
-    dataChannel.send(JSON.stringify({ type: 'update', players }));
+    const update = { type: 'update', players };
+    console.log(`Sending update: ${JSON.stringify(update)}`);
+    dataChannel.send(JSON.stringify(update));
+  } else {
+    console.error('Data channel is not open');
   }
 }
 
