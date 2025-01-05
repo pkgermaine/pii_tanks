@@ -73,7 +73,12 @@ function setupDataChannel(channel) {
     const data = JSON.parse(event.data);
     console.log('Message received:', data);
     if (data.type === 'update') {
-      players = data.players; // Sync player positions
+    
+        // Update the player positions while merging
+        for (const id in data.players) {
+            players[id] = data.players[id];
+            }
+
       console.log('Players updated:', players);
     }
   };
