@@ -14,8 +14,23 @@ let dataChannel;
 let players = {}; // Object to track player positions
 const playerId = Math.random().toString(36).substring(2, 15); // Unique ID for this player
 
-// STUN Server Configuration for WebRTC
-const config = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+const config = {
+  iceServers: [
+    {
+      urls: 'stun:stun.xirsys.com'
+    },
+    {
+      urls: 'turn:turn.xirsys.com:3478?transport=udp',
+      username: 'regal101',
+      credential: '2530fbe8-cd43-11ef-ac9c-0242ac150002'
+    },
+    {
+      urls: 'turn:turn.xirsys.com:3478?transport=tcp',
+      username: 'regal101',
+      credential: '2530fbe8-cd43-11ef-ac9c-0242ac150002'
+    }
+  ]
+};
 
 // Utility function to switch views
 function showGamePage() {
