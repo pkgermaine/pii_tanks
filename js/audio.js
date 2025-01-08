@@ -1,4 +1,5 @@
 
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 export async function playMusic() {
     const response = await fetch('assets/music/background.mp3');

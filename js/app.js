@@ -3,7 +3,7 @@ import { players, playerId, bullets, gameLoop, initializePlayer } from './game.j
 import { Player, Bullet } from './object.js';
 import { playMusic } from './audio.js';
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
 
 // Section 1: DOM Element References
 const createOfferButton = document.getElementById('createOffer');
