@@ -69,7 +69,7 @@ function showGamePage() {
 function setupDataChannel(channel) {
     channel.onopen = () => {
         console.log('Data channel is open!');
-        showGamePage(); // Transition to the game page
+        showGamePage(); // Transition to the game page//
     };
 
     channel.onmessage = event => {
