@@ -81,7 +81,7 @@ function initializePlayer() {
     sendUpdate();
 }
 
-
+//
 
 export function sendUpdate() {
     if (dataChannel?.readyState === 'open') {
