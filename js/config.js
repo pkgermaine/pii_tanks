@@ -3,3 +3,4 @@ export async function loadConfig() {
     if (!response.ok) throw new Error('Failed to fetch config');
     return response.json();
 }
+//
