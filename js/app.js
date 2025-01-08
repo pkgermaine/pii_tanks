@@ -173,7 +173,7 @@ document.addEventListener('keydown', (event) => {
     sendUpdate();
 });
 
-function sendUpdate() {
+export function sendUpdate() {
     if (dataChannel?.readyState === 'open') {
         dataChannel.send(JSON.stringify({ type: 'update', players }));
     }
