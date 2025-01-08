@@ -4,7 +4,7 @@ import { gameCanvas, ctx } from './app.js';
 export let players = {};
 export const playerId = Math.random().toString(36).substring(2, 15); // Unique ID for this player
 
-function initializePlayer() {
+export function initializePlayer() {
     players[playerId] = {
         x: Math.random() * gameCanvas.width,
         y: Math.random() * gameCanvas.height,
@@ -15,7 +15,7 @@ function initializePlayer() {
 }
 
 // Section 8: Rendering
-function gameLoop() {
+export function gameLoop() {
     ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
     Object.values(players).forEach(({ x, y, color }) => {
         ctx.fillStyle = color;
