@@ -1,6 +1,6 @@
 
 import { players, playerId, bullets, gameLoop, initializePlayer } from './game.js';
-import { Player } from './object.js';
+import { Player, Bullet } from './object.js';
 
 // Section 1: DOM Element References
 const createOfferButton = document.getElementById('createOffer');
