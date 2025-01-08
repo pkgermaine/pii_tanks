@@ -54,15 +54,36 @@ async function initializeApp() {
     });
 }
 
+// Handles UI transition to the game page and starts the game loop
+function showGamePage() {
+    matchmakingSection.style.display = 'none'; // Hide matchmaking section
+    gameSection.style.display = 'block'; // Show game section
+
+    console.log('Switched to the game page.'); // Debugging output
+
+    setTimeout(() => {
+        renderPlayers(); // Start the game rendering loop
+    }, 100); // Delay to ensure player initialization
+}
+
 function setupDataChannel(channel) {
+    channel.onopen = () => {
+        console.log('Data channel is open!');
+        initializePlayer(); // Initialize player's position
+        showGamePage(); // Transition to the game page
+    };
+
     channel.onmessage = event => {
         const data = JSON.parse(event.data);
         if (data.type === 'update') {
             for (const id in data.players) {
-                if (!players[id]) addPlayer(id, data.players[id].x, data.players[id].y, data.players[id].color);
+                if (!players[id]) {
+                    addPlayer(id, data.players[id].x, data.players[id].y, data.players[id].color);
+                }
             }
         }
     };
 }
+
 
 initializeApp();
