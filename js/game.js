@@ -5,6 +5,20 @@ const ctx = gameCanvas.getContext('2d');
 let players = {};
 const playerId = Math.random().toString(36).substring(2, 15);
 
+export function setupDataChannel(channel) {
+    channel.onopen = () => {
+      console.log('Data channel is open!');
+      initializePlayer(channel); // Pass the dataChannel here
+    };
+  
+    channel.onmessage = event => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'update') {
+        Object.assign(players, data.players);
+      }
+    };
+  }
+
 export function initializePlayer() {
   players[playerId] = { 
     x: Math.random() * gameCanvas.width, 
@@ -12,22 +26,10 @@ export function initializePlayer() {
     color: getRandomColor() 
   };
   console.log(`Player initialized: ${playerId}`, players[playerId]);
-  sendUpdate(players);
+  sendUpdate(players, dataChannel);
 }
 
-export function setupDataChannel(channel) {
-  channel.onopen = () => {
-    console.log('Data channel is open!');
-    initializePlayer();
-  };
 
-  channel.onmessage = event => {
-    const data = JSON.parse(event.data);
-    if (data.type === 'update') {
-      Object.assign(players, data.players);
-    }
-  };
-}
 
 export function handleKeydown(event) {
   if (!players[playerId]) return;
