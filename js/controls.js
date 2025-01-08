@@ -5,6 +5,8 @@ import { Bullet } from './object.js';
 // Track pressed keys
 const pressedKeys = new Set();
 
+//
+
 document.addEventListener('keydown', (event) => {
     pressedKeys.add(event.key.toLowerCase());
 });
