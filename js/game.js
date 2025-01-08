@@ -4,7 +4,7 @@ let canvas;
 let ctx;
 
 export function initialize(canvasElement) {
-    //playerId = Math.random().toString(36).substring(2, 15);
+    //playerId = Math.random().toString(36).substring(2, 15);//
     canvas = canvasElement;
     ctx = canvas.getContext('2d');
 }
