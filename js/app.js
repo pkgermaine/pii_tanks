@@ -1,4 +1,4 @@
-import { peerConnection, createPeerConnection, setupDataChannel, sendUpdate, gameLoop, players, updatePlayerPosition } from './game.js';
+import { peerConnection, dataChannel, createPeerConnection, setupDataChannel, sendUpdate, gameLoop, players, updatePlayerPosition } from './game.js';
 
 // Section 1: DOM Element References
 const createOfferButton = document.getElementById('createOffer');
