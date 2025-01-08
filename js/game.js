@@ -1,4 +1,5 @@
 import { sendUpdate } from './utils.js';
+import { showGamePage } from './ui.js';
 
 const gameCanvas = document.getElementById('gameCanvas');
 const ctx = gameCanvas.getContext('2d');
@@ -9,6 +10,7 @@ export function setupDataChannel(channel) {
     channel.onopen = () => {
       console.log('Data channel is open!');
       initializePlayer(channel);
+      showGamePage();
     };
   
     channel.onmessage = event => {
