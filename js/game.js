@@ -8,7 +8,7 @@ const playerId = Math.random().toString(36).substring(2, 15);
 export function setupDataChannel(channel) {
     channel.onopen = () => {
       console.log('Data channel is open!');
-      initializePlayer(channel); // Pass the dataChannel here
+      initializePlayer(channel);
     };
   
     channel.onmessage = event => {
