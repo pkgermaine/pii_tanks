@@ -1,3 +1,5 @@
+import { createPeerConnection, setupDataChannel, sendUpdate, gameLoop } from './game.js';
+
 // Section 1: DOM Element References
 const createOfferButton = document.getElementById('createOffer');
 const joinMatchButton = document.getElementById('joinMatch');
@@ -6,80 +8,18 @@ const matchCodeField = document.getElementById('matchCode');
 const joinCodeField = document.getElementById('joinCode');
 const matchmakingSection = document.getElementById('matchmakingSection');
 const gameSection = document.getElementById('gameSection');
+
 const gameCanvas = document.getElementById('gameCanvas');
-const ctx = gameCanvas.getContext('2d');//
+const ctx = gameCanvas.getContext('2d');
 
-// Section 2: Global Variables
-let peerConnection;
-let dataChannel;
-let players = {}; // Object to track player positions
-const playerId = Math.random().toString(36).substring(2, 15); // Unique ID for this player
-let config;
-
-// Section 3: Configuration Management
-async function loadConfig() {
-    try {
-        const response = await fetch('credentials.json');
-        if (!response.ok) throw new Error('Failed to fetch config');
-        config = await response.json();
-        console.log('Config loaded:', config);
-    } catch (error) {
-        console.error('Error loading config:', error);
-    }
-}
-loadConfig(); // Load config on startup
+// Export canvas context and gameCanvas for rendering
+export { ctx, gameCanvas };
 
 // Section 4: View Management
-function showGamePage() {
+export function showGamePage() {
     matchmakingSection.style.display = 'none';
     gameSection.style.display = 'block';
     setTimeout(gameLoop, 100); // Delay to ensure initialization
-}
-
-// Section 5: Peer Connection Setup
-function createPeerConnection() {
-    peerConnection = new RTCPeerConnection(config);
-
-    peerConnection.onicecandidate = (event) => {
-        if (event.candidate) {
-            console.log('New ICE candidate:', event.candidate);
-        } else {
-            console.log('All ICE candidates sent');
-        }
-    };
-
-    peerConnection.oniceconnectionstatechange = () => {
-        console.log('ICE connection state:', peerConnection.iceConnectionState);
-    };
-
-    peerConnection.onconnectionstatechange = () => {
-        console.log('Peer connection state:', peerConnection.connectionState);
-    };
-
-    peerConnection.ondatachannel = (event) => {
-        console.log('Data channel event received:', event);
-        setupDataChannel(event.channel);
-    };
-
-    console.log('Peer connection created');
-}
-
-function setupDataChannel(channel) {
-    dataChannel = channel;
-
-    dataChannel.onopen = () => {
-        console.log('Data channel is open!');
-        initializePlayer();
-        showGamePage();
-    };
-
-    dataChannel.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        if (data.type === 'update') {
-            Object.assign(players, data.players); // Merge player data
-            console.log('Players updated:', players);
-        }
-    };
 }
 
 // Section 6: Matchmaking Handlers
@@ -145,16 +85,6 @@ connectButton.onclick = async () => {
     }
 };
 
-// Section 7: Game Logic
-function initializePlayer() {
-    players[playerId] = {
-        x: Math.random() * gameCanvas.width,
-        y: Math.random() * gameCanvas.height,
-        color: getRandomColor()
-    };
-    console.log(`Player initialized: ${playerId}`, players[playerId]);
-    sendUpdate();
-}
 
 document.addEventListener('keydown', (event) => {
     if (!players[playerId]) return;
@@ -177,26 +107,3 @@ document.addEventListener('keydown', (event) => {
 
     sendUpdate();
 });
-
-function sendUpdate() {
-    if (dataChannel?.readyState === 'open') {
-        dataChannel.send(JSON.stringify({ type: 'update', players }));
-    }
-}
-
-// Section 8: Rendering
-function gameLoop() {
-    ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-    Object.values(players).forEach(({ x, y, color }) => {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(x, y, 20, 0, Math.PI * 2);
-        ctx.fill();
-    });
-    requestAnimationFrame(gameLoop);
-}
-
-// Section 9: Utility Functions
-function getRandomColor() {
-    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
-}
