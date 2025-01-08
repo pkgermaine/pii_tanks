@@ -1,4 +1,4 @@
-const players = {};
+export const players = {};
 export const playerId = Math.random().toString(36).substring(2, 15);
 let canvas;
 let ctx;
