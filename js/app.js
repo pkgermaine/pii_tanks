@@ -1,4 +1,5 @@
-import { peerConnection, dataChannel, createPeerConnection, setupDataChannel, sendUpdate, gameLoop, players, updatePlayerPosition } from './game.js';
+
+import { players, playerId, gameLoop, initializePlayer } from './game.js';
 
 // Section 1: DOM Element References
 const createOfferButton = document.getElementById('createOffer');
@@ -9,18 +10,79 @@ const joinCodeField = document.getElementById('joinCode');
 const matchmakingSection = document.getElementById('matchmakingSection');
 const gameSection = document.getElementById('gameSection');
 
-const gameCanvas = document.getElementById('gameCanvas');
-const ctx = gameCanvas.getContext('2d');
-const playerId = Math.random().toString(36).substring(2, 15);
+export const gameCanvas = document.getElementById('gameCanvas');
+export const ctx = gameCanvas.getContext('2d');//
 
-// Export canvas context and gameCanvas for rendering
-export { ctx, gameCanvas };
+// Section 2: Global Variables
+let peerConnection;
+let dataChannel;
+
+let config;
+
+// Section 3: Configuration Management
+async function loadConfig() {
+    try {
+        const response = await fetch('credentials.json');
+        if (!response.ok) throw new Error('Failed to fetch config');
+        config = await response.json();
+        console.log('Config loaded:', config);
+    } catch (error) {
+        console.error('Error loading config:', error);
+    }
+}
+loadConfig(); // Load config on startup
 
 // Section 4: View Management
-export function showGamePage() {
+function showGamePage() {
     matchmakingSection.style.display = 'none';
     gameSection.style.display = 'block';
     setTimeout(gameLoop, 100); // Delay to ensure initialization
+}
+
+// Section 5: Peer Connection Setup
+function createPeerConnection() {
+    peerConnection = new RTCPeerConnection(config);
+
+    peerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+            console.log('New ICE candidate:', event.candidate);
+        } else {
+            console.log('All ICE candidates sent');
+        }
+    };
+
+    peerConnection.oniceconnectionstatechange = () => {
+        console.log('ICE connection state:', peerConnection.iceConnectionState);
+    };
+
+    peerConnection.onconnectionstatechange = () => {
+        console.log('Peer connection state:', peerConnection.connectionState);
+    };
+
+    peerConnection.ondatachannel = (event) => {
+        console.log('Data channel event received:', event);
+        setupDataChannel(event.channel);
+    };
+
+    console.log('Peer connection created');
+}
+
+function setupDataChannel(channel) {
+    dataChannel = channel;
+
+    dataChannel.onopen = () => {
+        console.log('Data channel is open!');
+        initializePlayer();
+        showGamePage();
+    };
+
+    dataChannel.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.type === 'update') {
+            Object.assign(players, data.players); // Merge player data
+            console.log('Players updated:', players);
+        }
+    };
 }
 
 // Section 6: Matchmaking Handlers
@@ -86,16 +148,35 @@ connectButton.onclick = async () => {
     }
 };
 
+// Section 7: Game Logic
 
-// Listen for key presses and update player position
+
 document.addEventListener('keydown', (event) => {
-    if (!players[playerId]) {
-        console.warn('Player not initialized yet.');
-        return; // Exit if the player hasn't been initialized
+    if (!players[playerId]) return;
+
+    const player = players[playerId];
+    switch (event.key) {
+        case 'ArrowUp':
+            player.y = Math.max(0, player.y - 10);
+            break;
+        case 'ArrowDown':
+            player.y = Math.min(gameCanvas.height, player.y + 10);
+            break;
+        case 'ArrowLeft':
+            player.x = Math.max(0, player.x - 10);
+            break;
+        case 'ArrowRight':
+            player.x = Math.min(gameCanvas.width, player.x + 10);
+            break;
     }
 
-    updatePlayerPosition(playerId, event.key, gameCanvas.width, gameCanvas.height);
-
-    // If necessary, send updates to the peer
-    sendUpdate(); // Uncomment if you need to sync movement with peers
+    sendUpdate();
 });
+
+function sendUpdate() {
+    if (dataChannel?.readyState === 'open') {
+        dataChannel.send(JSON.stringify({ type: 'update', players }));
+    }
+}
+
+
