@@ -1,6 +1,9 @@
 
 import { players, playerId, bullets, gameLoop, initializePlayer } from './game.js';
 import { Player, Bullet } from './object.js';
+import { playMusic } from './audio.js';
+
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 // Section 1: DOM Element References
 const createOfferButton = document.getElementById('createOffer');
@@ -12,7 +15,7 @@ const matchmakingSection = document.getElementById('matchmakingSection');
 const gameSection = document.getElementById('gameSection');
 
 export const gameCanvas = document.getElementById('gameCanvas');
-export const ctx = gameCanvas.getContext('2d');//
+export const ctx = gameCanvas.getContext('2d');
 
 // Section 2: Global Variables
 let peerConnection;
@@ -168,7 +171,9 @@ connectButton.onclick = async () => {
     }
 };
 
-// Section 7: Game Logic
+document.addEventListener('click', () => {
+    playMusic();
+});
 
 
 
