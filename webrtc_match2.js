@@ -7,7 +7,7 @@ const joinCodeField = document.getElementById('joinCode');
 const matchmakingSection = document.getElementById('matchmakingSection');
 const gameSection = document.getElementById('gameSection');
 const gameCanvas = document.getElementById('gameCanvas');
-const ctx = gameCanvas.getContext('2d');
+const ctx = gameCanvas.getContext('2d');//
 
 // Section 2: Global Variables
 let peerConnection;
