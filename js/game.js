@@ -1,63 +1,53 @@
-import { sendUpdate } from './utils.js';
-import { showGamePage } from './ui.js';
+const players = {};
+let playerId;
+let canvas;
+let ctx;
 
-const gameCanvas = document.getElementById('gameCanvas');
-const ctx = gameCanvas.getContext('2d');
-let players = {};
-const playerId = Math.random().toString(36).substring(2, 15);
-
-export function setupDataChannel(channel) {
-    channel.onopen = () => {
-      console.log('Data channel is open!');
-      initializePlayer(channel);
-      showGamePage();
-    };
-  
-    channel.onmessage = event => {
-      const data = JSON.parse(event.data);
-      if (data.type === 'update') {
-        Object.assign(players, data.players);
-      }
-    };
-  }
-
-export function initializePlayer(dataChannel) {
-  players[playerId] = { 
-    x: Math.random() * gameCanvas.width, 
-    y: Math.random() * gameCanvas.height, 
-    color: getRandomColor() 
-  };
-  console.log(`Player initialized: ${playerId}`, players[playerId]);
-  sendUpdate(players, dataChannel);
+export function initialize(canvasElement) {
+    playerId = Math.random().toString(36).substring(2, 15);
+    canvas = canvasElement;
+    ctx = canvas.getContext('2d');
 }
 
-
-
-export function handleKeydown(event) {
-  if (!players[playerId]) return;
-
-  const player = players[playerId];
-  switch (event.key) {
-    case 'ArrowUp': player.y -= 10; break;
-    case 'ArrowDown': player.y += 10; break;
-    case 'ArrowLeft': player.x -= 10; break;
-    case 'ArrowRight': player.x += 10; break;
-  }
-  sendUpdate(players);
+export function addPlayer(id, x, y, color) {
+    players[id] = { x, y, color };
 }
 
-function gameLoop() {
-  ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-  for (const id in players) {
+export function movePlayer(id, direction) {
     const player = players[id];
-    ctx.fillStyle = player.color;
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, 20, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  requestAnimationFrame(gameLoop);
+    if (!player) return;
+
+    const speed = 10;
+    switch (direction) {
+        case 'ArrowUp':
+            player.y = Math.max(0, player.y - speed);
+            break;
+        case 'ArrowDown':
+            player.y = Math.min(canvas.height, player.y + speed);
+            break;
+        case 'ArrowLeft':
+            player.x = Math.max(0, player.x - speed);
+            break;
+        case 'ArrowRight':
+            player.x = Math.min(canvas.width, player.x + speed);
+            break;
+    }
 }
 
-function getRandomColor() {
-  return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+export function renderPlayers() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    for (const id in players) {
+        const player = players[id];
+        ctx.fillStyle = player.color;
+        ctx.beginPath();
+        ctx.arc(player.x, player.y, 20, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    requestAnimationFrame(renderPlayers);
+}
+
+export function getRandomColor() {
+    return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
 }
