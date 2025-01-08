@@ -19,7 +19,7 @@ export function setupDataChannel(channel) {
     };
   }
 
-export function initializePlayer() {
+export function initializePlayer(dataChannel) {
   players[playerId] = { 
     x: Math.random() * gameCanvas.width, 
     y: Math.random() * gameCanvas.height, 
