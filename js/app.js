@@ -63,7 +63,7 @@ function showGamePage() {
 
     setTimeout(() => {
         renderPlayers(); // Start the game rendering loop
-    }, 100); // Delay to ensure player initialization
+    }, 100); // Delay to ensure player initialization//
 }
 
 function setupDataChannel(channel) {
