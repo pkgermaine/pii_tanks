@@ -1,7 +1,7 @@
 import { loadConfig } from './config.js';
 import { createPeerConnection, createDataChannel, createOffer, createAnswer, setLocalDescription, setRemoteDescription, sendData } from './webrtc.js';
 import { initialize, addPlayer, movePlayer, renderPlayers, getRandomColor, playerId } from './game.js';
-import { encodeData, decodeData } from './utils.js';
+import { encodeData, decodeData } from './utils.js';//
 
 const createOfferButton = document.getElementById('createOffer');
 const joinMatchButton = document.getElementById('joinMatch');
