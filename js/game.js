@@ -1,5 +1,5 @@
 import { gameCanvas, ctx } from './app.js';
-import { sendUpdate } from './controls.js';
+import { sendUpdate, updatePlayerMovement } from './controls.js';
 import { Player, Bullet } from './object.js';
 
 // export players object to be used in webrtc_match.js
@@ -13,18 +13,27 @@ export function initializePlayer() {
     sendUpdate();
 }
 
-// Section 8: Rendering
-export function gameLoop() {
+let lastTimestamp = 0;
+export function gameLoop(timestamp) {
+    const deltaTime = timestamp - lastTimestamp;
+    lastTimestamp = timestamp;
+
+    // Clear the canvas
     ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+    // Update player movement
+    updatePlayerMovement(deltaTime);
+
+    // Render players
     Object.values(players).forEach(player => player.draw(ctx));
 
-    // update bullets
+    // Update and render bullets
     bullets.forEach(bullet => {
         bullet.update();
         bullet.draw(ctx);
     });
 
-    
+    // Request the next frame
     requestAnimationFrame(gameLoop);
 }
 

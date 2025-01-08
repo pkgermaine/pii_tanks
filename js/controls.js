@@ -7,19 +7,17 @@ const pressedKeys = new Set();
 
 document.addEventListener('keydown', (event) => {
     pressedKeys.add(event.key.toLowerCase());
-    handleMovement();
 });
 
 document.addEventListener('keyup', (event) => {
     pressedKeys.delete(event.key.toLowerCase());
 });
 
-// code for bullets when space is pressed
+// Handle bullet firing when space is pressed
 document.addEventListener('keydown', (event) => {
     if (event.key === ' ') {
         const player = players[playerId];
         if (!player) return;
-
 
         const velocity = { x: 0, y: 0 };
         if (pressedKeys.has('w')) velocity.y = -5; // Up
@@ -29,28 +27,27 @@ document.addEventListener('keydown', (event) => {
 
         const bullet = new Bullet(player.x, player.y, 5, 5, 'red', velocity);
 
-
         bullets.push(bullet);
         sendBullet(bullet);
     }
 });
 
-// Handle movement logic
-function handleMovement() {
+// Update player movement
+export function updatePlayerMovement(deltaTime) {
     if (!players[playerId]) return;
 
     const player = players[playerId];
-    const speed = 10; // Speed of movement
+    const speed = 200; // Speed in pixels per second
     let dx = 0; // Change in x-axis
     let dy = 0; // Change in y-axis
 
-    // Check for key combinations
-    if (pressedKeys.has('w')) dy -= speed; // Up
-    if (pressedKeys.has('s')) dy += speed; // Down
-    if (pressedKeys.has('a')) dx -= speed; // Left
-    if (pressedKeys.has('d')) dx += speed; // Right
+    // Check pressed keys for movement
+    if (pressedKeys.has('w')) dy -= speed * (deltaTime / 1000); // Up
+    if (pressedKeys.has('s')) dy += speed * (deltaTime / 1000); // Down
+    if (pressedKeys.has('a')) dx -= speed * (deltaTime / 1000); // Left
+    if (pressedKeys.has('d')) dx += speed * (deltaTime / 1000); // Right
 
-    // Normalize diagonal movement to ensure consistent speed
+    // Normalize diagonal movement
     if (dx !== 0 && dy !== 0) {
         const normalizationFactor = Math.sqrt(2) / 2;
         dx *= normalizationFactor;
@@ -64,6 +61,7 @@ function handleMovement() {
     sendUpdate(); // Notify peers about the movement
 }
 
+// Send updates to peers
 export function sendUpdate() {
     if (dataChannel?.readyState === 'open') {
         dataChannel.send(JSON.stringify({ type: 'update', players }));
