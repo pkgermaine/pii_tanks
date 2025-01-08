@@ -3,7 +3,7 @@ import { showGamePage, ctx, gameCanvas } from './app.js';
 // Section 2: Global Variables
 let peerConnection;
 let dataChannel;
-let players = {}; // Object to track player positions
+export const players = {}; // Object to track player positions
 const playerId = Math.random().toString(36).substring(2, 15); // Unique ID for this player
 let config;
 
@@ -99,6 +99,28 @@ export function gameLoop() {
         ctx.fill();
     });
     requestAnimationFrame(gameLoop);
+}
+
+// Function to update a player's position
+export function updatePlayerPosition(playerId, direction, canvasWidth, canvasHeight) {
+    const player = players[playerId];
+    if (!player) return;
+
+    switch (direction) {
+        case 'ArrowUp':
+            player.y = Math.max(0, player.y - 10);
+            break;
+        case 'ArrowDown':
+            player.y = Math.min(canvasHeight, player.y + 10);
+            break;
+        case 'ArrowLeft':
+            player.x = Math.max(0, player.x - 10);
+            break;
+        case 'ArrowRight':
+            player.x = Math.min(canvasWidth, player.x + 10);
+            break;
+    }
+    console.log(`Player moved: ${JSON.stringify(player)}`);
 }
 
 // Section 9: Utility Functions

@@ -1,4 +1,4 @@
-import { createPeerConnection, setupDataChannel, sendUpdate, gameLoop } from './game.js';
+import { createPeerConnection, setupDataChannel, sendUpdate, gameLoop, players, updatePlayerPosition } from './game.js';
 
 // Section 1: DOM Element References
 const createOfferButton = document.getElementById('createOffer');
@@ -11,6 +11,7 @@ const gameSection = document.getElementById('gameSection');
 
 const gameCanvas = document.getElementById('gameCanvas');
 const ctx = gameCanvas.getContext('2d');
+const playerId = Math.random().toString(36).substring(2, 15);
 
 // Export canvas context and gameCanvas for rendering
 export { ctx, gameCanvas };
@@ -86,24 +87,15 @@ connectButton.onclick = async () => {
 };
 
 
+// Listen for key presses and update player position
 document.addEventListener('keydown', (event) => {
-    if (!players[playerId]) return;
-
-    const player = players[playerId];
-    switch (event.key) {
-        case 'ArrowUp':
-            player.y = Math.max(0, player.y - 10);
-            break;
-        case 'ArrowDown':
-            player.y = Math.min(gameCanvas.height, player.y + 10);
-            break;
-        case 'ArrowLeft':
-            player.x = Math.max(0, player.x - 10);
-            break;
-        case 'ArrowRight':
-            player.x = Math.min(gameCanvas.width, player.x + 10);
-            break;
+    if (!players[playerId]) {
+        console.warn('Player not initialized yet.');
+        return; // Exit if the player hasn't been initialized
     }
 
-    sendUpdate();
+    updatePlayerPosition(playerId, event.key, gameCanvas.width, gameCanvas.height);
+
+    // If necessary, send updates to the peer
+    sendUpdate(); // Uncomment if you need to sync movement with peers
 });
