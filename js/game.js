@@ -1,29 +1,21 @@
 import { gameCanvas, ctx } from './app.js';
 import { sendUpdate } from './controls.js';
+import { Player } from './object.js';
 
 // export players object to be used in webrtc_match.js
 export let players = {};
 export const playerId = Math.random().toString(36).substring(2, 15); // Unique ID for this player
 
 export function initializePlayer() {
-    players[playerId] = {
-        x: Math.random() * gameCanvas.width,
-        y: Math.random() * gameCanvas.height,
-        color: getRandomColor()
-    };
-    console.log(`Player initialized: ${playerId}`, players[playerId]);
+
+    players[playerId] = new Player(Math.random() * gameCanvas.width, Math.random() * gameCanvas.height, 20, 20, getRandomColor(), 100);
     sendUpdate();
 }
 
 // Section 8: Rendering
 export function gameLoop() {
     ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-    Object.values(players).forEach(({ x, y, color }) => {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(x, y, 20, 0, Math.PI * 2);
-        ctx.fill();
-    });
+    Object.values(players).forEach(player => player.draw(ctx));
     requestAnimationFrame(gameLoop);
 }
 

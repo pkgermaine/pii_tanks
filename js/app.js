@@ -78,11 +78,22 @@ function setupDataChannel(channel) {
 
     dataChannel.onmessage = (event) => {
         const data = JSON.parse(event.data);
+    
         if (data.type === 'update') {
-            Object.assign(players, data.players); // Merge player data
-            console.log('Players updated:', players);
+            const receivedPlayers = {};
+            for (const id in data.players) {
+                const playerData = data.players[id];
+                // Recreate Player instances
+                receivedPlayers[id] = new Player(playerData.x, playerData.y, playerData.height, playerData.width, playerData.color, playerData.health);
+            }
+    
+            console.log(receivedPlayers);
+            // Merge player data
+            Object.assign(players, receivedPlayers);
         }
+        
     };
+    
 }
 
 // Section 6: Matchmaking Handlers
