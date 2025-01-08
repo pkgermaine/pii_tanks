@@ -1,5 +1,5 @@
 
-import { players, playerId, gameLoop, initializePlayer } from './game.js';
+import { players, playerId, bullets, gameLoop, initializePlayer } from './game.js';
 import { Player } from './object.js';
 
 // Section 1: DOM Element References
@@ -91,6 +91,14 @@ function setupDataChannel(channel) {
             console.log(receivedPlayers);
             // Merge player data
             Object.assign(players, receivedPlayers);
+
+
+        }
+
+        if (data.type === 'bullet') {
+            const bulletData = data.bullet;
+            const bullet = new Bullet(bulletData.x, bulletData.y, bulletData.height, bulletData.width, bulletData.color, bulletData.velocity);
+            bullets.push(bullet);
         }
         
     };

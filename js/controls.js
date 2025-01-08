@@ -20,14 +20,18 @@ document.addEventListener('keydown', (event) => {
         const player = players[playerId];
         if (!player) return;
 
-        const bullet = new Bullet(player.x, player.y, 5, 5, 'red', 10);
 
-        if (pressedKeys.has('w')) bullet.velocity.y = -bullet.speed; // Up
-        if (pressedKeys.has('s')) bullet.velocity.y = bullet.speed; // Down
-        if (pressedKeys.has('a')) bullet.velocity.x = -bullet.speed; // Left
-        if (pressedKeys.has('d')) bullet.velocity.x = bullet.speed; // Right
+        const velocity = { x: 0, y: 0 };
+        if (pressedKeys.has('w')) velocity.y = -5; // Up
+        if (pressedKeys.has('s')) velocity.y = 5; // Down
+        if (pressedKeys.has('a')) velocity.x = -5; // Left
+        if (pressedKeys.has('d')) velocity.x = 5; // Right
+
+        const bullet = new Bullet(player.x, player.y, 5, 5, 'red', velocity);
+
 
         bullets.push(bullet);
+        sendBullet(bullet);
     }
 });
 
@@ -63,5 +67,11 @@ function handleMovement() {
 export function sendUpdate() {
     if (dataChannel?.readyState === 'open') {
         dataChannel.send(JSON.stringify({ type: 'update', players }));
+    }
+}
+
+export function sendBullet(bullet) {
+    if (dataChannel?.readyState === 'open') {
+        dataChannel.send(JSON.stringify({ type: 'bullet', bullet }));
     }
 }

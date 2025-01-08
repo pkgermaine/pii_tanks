@@ -45,10 +45,9 @@ export class Player extends GameObject {
 
 // class for all bullets
 export class Bullet extends GameObject {
-    constructor(x, y, width, height, color, speed) {
+    constructor(x, y, width, height, color, velocity) {
         super(x, y, width, height, color);
-        this.speed = speed;
-        this.velocity = { x: 0, y: 0 };
+        this.velocity = velocity;
     }
 
     // update the bullet's position
@@ -60,5 +59,16 @@ export class Bullet extends GameObject {
     draw(ctx) {
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+
+    toJSON() {
+        return {
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height,
+            color: this.color,
+            velocity: this.velocity
+        };
     }
 }
