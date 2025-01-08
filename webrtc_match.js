@@ -14,22 +14,29 @@ let dataChannel;
 let players = {}; // Object to track player positions
 const playerId = Math.random().toString(36).substring(2, 15); // Unique ID for this player
 
-const config = {
-  iceServers: [{
-    urls: [ "stun:eu-turn4.xirsys.com" ]
-  }, {
-    username: "su-Ww6Z5y0nAdhpVhpg-kTxYd4YMEOdV56nKKvt7DxtyI8mJCHx7jbRNTZQlgTT0AAAAAGd-iadyZWdhbDEwMQ==",
-    credential: "b29df25a-cdcb-11ef-b21e-0242ac140004",
-    urls: [
-        "turn:eu-turn4.xirsys.com:80?transport=udp",
-        "turn:eu-turn4.xirsys.com:3478?transport=udp",
-        "turn:eu-turn4.xirsys.com:80?transport=tcp",
-        "turn:eu-turn4.xirsys.com:3478?transport=tcp",
-        "turns:eu-turn4.xirsys.com:443?transport=tcp",
-        "turns:eu-turn4.xirsys.com:5349?transport=tcp"
-    ]
- }]
-};
+
+
+let config;
+
+function loadConfig() {
+  return fetch('credentials.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch config');
+      }
+      return response.json();
+    })
+    .then(data => {
+      config = data;
+      console.log('Config loaded:', config);
+    })
+    .catch(error => {
+      console.error('Error loading config:', error);
+    });
+}
+
+// Call this once at the start
+loadConfig();
 
 // Utility function to switch views
 function showGamePage() {
