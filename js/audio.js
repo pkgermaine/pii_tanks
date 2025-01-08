@@ -1,7 +1,9 @@
 
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
 
 export async function playMusic() {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
     const response = await fetch('assets/music/background.mp3');
     const audioData = await response.arrayBuffer();
     const audioBuffer = await audioContext.decodeAudioData(audioData);
