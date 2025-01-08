@@ -15,7 +15,7 @@ export const ctx = gameCanvas.getContext('2d');//
 
 // Section 2: Global Variables
 let peerConnection;
-let dataChannel;
+export let dataChannel;
 
 let config;
 
@@ -151,32 +151,6 @@ connectButton.onclick = async () => {
 // Section 7: Game Logic
 
 
-document.addEventListener('keydown', (event) => {
-    if (!players[playerId]) return;
 
-    const player = players[playerId];
-    switch (event.key) {
-        case 'ArrowUp':
-            player.y = Math.max(0, player.y - 10);
-            break;
-        case 'ArrowDown':
-            player.y = Math.min(gameCanvas.height, player.y + 10);
-            break;
-        case 'ArrowLeft':
-            player.x = Math.max(0, player.x - 10);
-            break;
-        case 'ArrowRight':
-            player.x = Math.min(gameCanvas.width, player.x + 10);
-            break;
-    }
-
-    sendUpdate();
-});
-
-export function sendUpdate() {
-    if (dataChannel?.readyState === 'open') {
-        dataChannel.send(JSON.stringify({ type: 'update', players }));
-    }
-}
 
 

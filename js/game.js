@@ -1,4 +1,5 @@
-import { gameCanvas, ctx, sendUpdate } from './app.js';
+import { gameCanvas, ctx } from './app.js';
+import { sendUpdate } from './controls.js';
 
 // export players object to be used in webrtc_match.js
 export let players = {};
