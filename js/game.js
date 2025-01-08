@@ -1,10 +1,11 @@
 import { gameCanvas, ctx } from './app.js';
 import { sendUpdate } from './controls.js';
-import { Player } from './object.js';
+import { Player, Bullet } from './object.js';
 
 // export players object to be used in webrtc_match.js
 export let players = {};
 export const playerId = Math.random().toString(36).substring(2, 15); // Unique ID for this player
+export let bullets = [];
 
 export function initializePlayer() {
 
@@ -16,6 +17,14 @@ export function initializePlayer() {
 export function gameLoop() {
     ctx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
     Object.values(players).forEach(player => player.draw(ctx));
+
+    // update bullets
+    bullets.forEach(bullet => {
+        bullet.update();
+        bullet.draw(ctx);
+    });
+
+    
     requestAnimationFrame(gameLoop);
 }
 

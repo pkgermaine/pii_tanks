@@ -1,5 +1,6 @@
 import { dataChannel, gameCanvas } from './app.js';
-import { players, playerId } from './game.js';
+import { players, playerId, bullets } from './game.js';
+import { Bullet } from './object.js';
 
 // Track pressed keys
 const pressedKeys = new Set();
@@ -11,6 +12,23 @@ document.addEventListener('keydown', (event) => {
 
 document.addEventListener('keyup', (event) => {
     pressedKeys.delete(event.key.toLowerCase());
+});
+
+// code for bullets when space is pressed
+document.addEventListener('keydown', (event) => {
+    if (event.key === ' ') {
+        const player = players[playerId];
+        if (!player) return;
+
+        const bullet = new Bullet(player.x, player.y, 5, 5, 'red', 10);
+
+        if (pressedKeys.has('w')) bullet.velocity.y = -bullet.speed; // Up
+        if (pressedKeys.has('s')) bullet.velocity.y = bullet.speed; // Down
+        if (pressedKeys.has('a')) bullet.velocity.x = -bullet.speed; // Left
+        if (pressedKeys.has('d')) bullet.velocity.x = bullet.speed; // Right
+
+        bullets.push(bullet);
+    }
 });
 
 // Handle movement logic

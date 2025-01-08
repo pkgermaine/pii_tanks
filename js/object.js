@@ -42,3 +42,23 @@ export class Player extends GameObject {
         };
     }
 }
+
+// class for all bullets
+export class Bullet extends GameObject {
+    constructor(x, y, width, height, color, speed) {
+        super(x, y, width, height, color);
+        this.speed = speed;
+        this.velocity = { x: 0, y: 0 };
+    }
+
+    // update the bullet's position
+    update() {
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+    }
+
+    draw(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+}
