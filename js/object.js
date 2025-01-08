@@ -48,6 +48,7 @@ export class Bullet extends GameObject {
     constructor(x, y, width, height, color, velocity) {
         super(x, y, width, height, color);
         this.velocity = velocity;
+        this.speed = 5;
     }
 
     // update the bullet's position

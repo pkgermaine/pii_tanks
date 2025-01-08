@@ -13,24 +13,36 @@ document.addEventListener('keyup', (event) => {
     pressedKeys.delete(event.key.toLowerCase());
 });
 
-// Handle bullet firing when space is pressed
-document.addEventListener('keydown', (event) => {
-    if (event.key === ' ') {
-        const player = players[playerId];
-        if (!player) return;
+document.addEventListener('mousedown', (event) => {
+    const player = players[playerId];
+    if (!player) return;
 
-        const velocity = { x: 0, y: 0 };
-        if (pressedKeys.has('w')) velocity.y = -5; // Up
-        if (pressedKeys.has('s')) velocity.y = 5; // Down
-        if (pressedKeys.has('a')) velocity.x = -5; // Left
-        if (pressedKeys.has('d')) velocity.x = 5; // Right
+    // Get the canvas position relative to the viewport
+    const rect = gameCanvas.getBoundingClientRect();
 
-        const bullet = new Bullet(player.x, player.y, 5, 5, 'red', velocity);
+    // Calculate mouse click position relative to the canvas
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
 
-        bullets.push(bullet);
-        sendBullet(bullet);
-    }
+    // Calculate direction vector from player to mouse position
+    const dx = mouseX - player.x;
+    const dy = mouseY - player.y;
+
+    // Normalize the direction vector
+    const magnitude = Math.sqrt(dx * dx + dy * dy);
+    const velocity = {
+        x: (dx / magnitude) * 5, // Scale by bullet speed
+        y: (dy / magnitude) * 5, // Scale by bullet speed
+    };
+
+    // Create a new bullet
+    const bullet = new Bullet(player.x, player.y, 5, 5, 'red', velocity);
+
+    // Add bullet to the array and send it
+    bullets.push(bullet);
+    sendBullet(bullet);
 });
+
 
 // Update player movement
 export function updatePlayerMovement(deltaTime) {
