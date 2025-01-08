@@ -1,8 +1,8 @@
 import { showGamePage, ctx, gameCanvas } from './app.js';
 
 // Section 2: Global Variables
-let peerConnection;
-let dataChannel;
+export let peerConnection;
+export let dataChannel;
 export const players = {}; // Object to track player positions
 const playerId = Math.random().toString(36).substring(2, 15); // Unique ID for this player
 let config;
